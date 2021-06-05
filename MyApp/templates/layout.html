@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- JQuery -->
+    <script
+  src="https://code.jquery.com/jquery-3.5.0.js"
+  integrity="sha256-r/AaFHrszJtwpe+tHyNi/XCfMxYpbsRg2Uqn0x3s2zc="
+  crossorigin="anonymous"></script>
+<!-- Socketio -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Font awesom -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css" rel="stylesheet"/>
+
+     <!-- Custom CSS -->
+     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}" >
+     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/chatStyle.css') }}" >
+     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/foodStyle.css') }}" >
+
+    {% if title %}
+        <title>Flask Blog - {{ title}} </title>
+    {% else %}
+        <title>Flask Blog</title>
+    {% endif %}
+</head>
+<body>
+    <header class="site-header">
+      
+      <div class="container">
+
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark-red">
+          <a class="navbar-brand input-serach" href="#">IUSM</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item " id="home" >
+                <a class="nav-link" href="{{ url_for('admin.admin_main') }}">Home <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item" id="Order" >
+                <a class="nav-link" href="{{ url_for('admin.admin_order') }}">Order</a>
+              </li>
+              <li class="nav-item" id="foods_list" >
+                <a class="nav-link " href="{{ url_for('foods.foods_list') }}">Foods</a>
+              </li>
+              <li class="nav-item" id="add_foods" >
+                <a class="nav-link " href="{{ url_for('foods.add_foods') }}">Add Foods</a>
+              </li>
+            </ul>
+            
+
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item mr-3">
+                <form class="form-inline my-2 my-lg-0">
+                  <input class="form-control mr-sm-2 input-serach" type="search" placeholder="Search" aria-label="Search">
+                  <button class="btn btn-outline-success my-2 my-sm-0 input-serach" type="submit">Search</button>
+                </form>
+              </li>
+              <li class="nav-item" id="logout" >
+                  <a class="nav-link " href="{{ url_for('admin.logout') }}">Logout</a>
+              </li>
+            </ul>
+            
+          </div>
+        </nav>
+
+      </div>
+      </header>
+
+      <main role="main" class="container">
+        
+        {% block content %}
+        {% endblock %}
+
+      </main>
+
+
+      
+
+
+
+    <!-- Optional JavaScript -->
+    
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  
+</body>
+</html>

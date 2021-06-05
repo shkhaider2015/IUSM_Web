@@ -1,0 +1,423 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container">
+  <h2 class=" text-center mt-3">Chat Room</h2>
+
+    <div class="mesgs">
+      <div class="msg_history">
+
+        <!-- Messages shows here -->
+
+      </div>
+      <div class="type_msg ">
+        <div class="input_msg_write">
+          <input type="text" class="write_msg" placeholder="Type a message" />
+          <button class="msg_send_btn" type="button" value="{{key}}"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+        </div>
+      </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+    console.log("ready ")
+
+      function getDayName(num)
+      {
+        var dayName = "Sun";
+        switch(num)
+        {
+          case 0:
+          dayName = "Sun"
+          break;
+          case 1:
+          //
+          dayName = "Mon"
+          break;
+          case 2:
+          //
+          dayName = "Tue"
+          break;
+          case 3:
+          //
+          dayName = "Wed"
+          break;
+          case 4:
+          //
+          dayName = "Thu"
+          break;
+          case 5:
+          //
+          dayName = "Fri"
+          break;
+          case 6:
+          //
+          dayName = "Sat"
+          break;
+          default:
+          dayName = "def"
+          break;
+        }
+        
+        return dayName;
+      }
+      function getMonthName(num)
+      {
+        var monthName = "";
+        console.log("Value of num : " + num)
+
+        switch(num)
+        {
+          case 0:
+          monthName = "Jan";
+          break;
+          case 1:
+          monthName = "Feb";
+          break;
+          case 2:
+          monthName = "Mar";
+          break;
+          case 3:
+          monthName = "Apr";
+          break;
+          case 4:
+          monthName = "May";
+          break;
+          case 5:
+          monthName = "Jun";
+          break;
+          case 6:
+          monthName = "Jul";
+          break;
+          case 7:
+          monthName = "Aug";
+          break;
+          case 8:
+          monthName = "Sep";
+          break;
+          case 9:
+          monthName = "Oct";
+          break;
+          case 10:
+          monthName = "Nov";
+          break;
+          case 11:
+          monthName = "Dec";
+          break;
+
+        }
+        
+        return monthName;
+      }
+      function getMinutsFormate(t)
+      {
+        var time = "";
+        if(t < 10)
+        {
+          time = "0" + t;
+        }
+        else
+        {
+          time = t;
+        }
+
+        return time
+      }
+      function getHourseFormate(t)
+      {
+        time = "";
+        if( t < 10)
+        {
+          time = "0" + t;
+        }
+        else
+        {
+          if(t > 12)
+          {
+            time = t - 12;
+          }
+          else
+          {
+            time = t;
+          }
+
+        }
+
+        return time;
+      }
+
+      function getTime(milis)
+      {
+        var time;
+        var currentTime = new Date(Date.now());
+        var postTime = new Date(milis);
+
+        if(currentTime.getFullYear() === postTime.getFullYear() )
+        {
+          if(currentTime.getMonth() === postTime.getMonth() )
+          {
+            if(currentTime.getDate() === postTime.getDate() )
+            {
+              time = "Today " + getHourseFormate(postTime.getHours()) + ":" + getMinutsFormate(postTime.getMinutes());
+            }
+            else if( (postTime.getDate()+1) === currentTime.getDate() )
+            {
+              time = "Yesterday " + getHourseFormate(postTime.getHours()) + ":" + getMinutsFormate(postTime.getMinutes());
+            }
+            else
+            {
+              time = getMonthName(postTime.getMonth()) + " " + postTime.getDate()
+            }
+          }
+          else
+          {
+            time = getMonthName(postTime.getMonth()) + " " + postTime.getDate()
+          }
+          
+        }
+        else
+        {
+          time = getMonthName(postTime.getDate()) + " " +  postTime.getFullYear()
+        }
+        
+        return time;
+      }
+
+      
+
+    var scrolled = false;
+    var key = $(".msg_send_btn").val();
+    var msg_history = $(".msg_history");
+    $.ajax({
+                
+                url: '/accept_chat_process',
+                datatype : 'application/json;charset=UTF-8',
+                data: {"key": key, 'm_type' : "refresh"},
+                type: 'POST',
+                success: function(response){
+                    console.log( "This is response" + response);
+                    
+                    var data = JSON.parse(response);
+                    var x, id;
+                    for (x in data)
+                    {
+                    
+                        id = data[x]['senderId']
+                        if (id != "17352015")
+                        {
+                            
+                            console.log("This is clint : " + id)
+                            msg_history.append(` <div class="incoming_msg">
+                                                 <div class="incoming_msg_img rounded-circle"> <img src="` + data[x]['senderProfileURI'] + `" alt="Profile Picture"> </div>
+                                                 <div class="received_msg">
+                                                 <div class="received_withd_msg">
+                                                 <p>` + data[x]['msg'] + `</p>
+                                                 <span class="time_date">`+ getTime(data[x]['msgTime']) + ` </span></div>
+                                                 </div>
+                                                 </div> `)
+
+                            
+                            
+
+                        }
+                        else if (id == "17352015")
+                        {
+                            console.log("This is admin : " + id)
+                            msg_history.append(` <div class="outgoing_msg">
+                                                <div class="sent_msg">
+                                                <p>` +  data[x]['msg'] + `</p>
+                                                <span class="time_date">` + getTime(data[x]['msgTime']) + `</span> </div>
+                                                </div> `);
+                            
+                            
+                        }
+                        else
+                        {
+                            console.log("not clicnt nor admin : " + id)
+                        }
+                    }
+                    
+                    updateScroll()
+                },
+                error: function(error){
+                    console.log(error);
+                }
+            });
+   
+
+
+    $( "button" ).click(function() {
+        var key = $(this).val();
+        var msg_history = $(".msg_history");
+        var msg = $(".write_msg").val();
+        $(".write_msg").val("");
+      if(msg !== "" )
+      {
+        console.log("Message is not empty");
+        $.ajax({
+                url: '/accept_chat_process',
+                datatype : 'application/json;charset=UTF-8',
+                data: {"key": key, 'm_type' : 'send', 'msg' : msg},
+                type: 'POST',
+                success: function(response){
+                    console.log( "This is response" + response);
+                    msg_history.empty();
+                    var data = JSON.parse(response);
+                    var x, id;
+                    for (x in data)
+                    {
+                    
+                        id = data[x]['senderId']
+                        if (id != "17352015")
+                        {
+                            console.log("This is clint : " + id)
+                            msg_history.append(` <div class="incoming_msg">
+                                                 <div class="incoming_msg_img rounded-circle"> <img src="` + data[x]['senderProfileURI'] + `" alt="Profile Picture"> </div>
+                                                 <div class="received_msg">
+                                                 <div class="received_withd_msg">
+                                                 <p>` + data[x]['msg'] + `</p>
+                                                 <span class="time_date">`+ getTime(data[x]['msgTime']) + ` </span></div>
+                                                 </div>
+                                                 </div> `)
+
+                            
+                            
+
+                        }
+                        else if (id == "17352015")
+                        {
+                            console.log("This is admin : " + id)
+                            msg_history.append(` <div class="outgoing_msg">
+                                                <div class="sent_msg">
+                                                <p>` +  data[x]['msg'] + `</p>
+                                                <span class="time_date">` + getTime(data[x]['msgTime']) + `</span> </div>
+                                                </div> `);
+                            
+                            
+                        }
+                        else
+                        {
+                            console.log("not clicnt nor admin : " + id)
+                        }
+                    }
+                    
+                    scrolled = false;
+                },
+                error: function(error){
+                    console.log(error);
+                }
+            });
+      
+      }
+      else
+      {
+        console.log("Message is empty");
+      }
+        console.log("Ajax Called")
+        
+
+
+    });
+    
+
+    setInterval(function(){
+      console.log("Run Interval")
+      
+      
+      $.ajax({
+                
+                url: '/accept_chat_process',
+                datatype : 'application/json;charset=UTF-8',
+                data: {"key": key, 'm_type' : "detect_changes"},
+                type: 'POST',
+                success: function(response){
+                    console.log( "This is interval ajax response" + response);
+                    
+                    var data = JSON.parse(response);
+                    var x, id;
+                    if("status" in data)
+                    {
+                      console.log("status is -->" + JSON.stringify(data))
+                    }
+                    else
+                    {
+                      console.log("Not status")
+                      msg_history.empty();
+                      for (x in data)
+                    {
+                        
+                        id = data[x]['senderId']
+                        if (id != "17352015")
+                        {
+                            
+
+                            console.log("This is clint : " + id)
+                            msg_history.append(` <div class="incoming_msg">
+                                                 <div class="incoming_msg_img rounded-circle"> <img src="` + data[x]['senderProfileURI'] + `" alt="Profile Picture"> </div>
+                                                 <div class="received_msg">
+                                                 <div class="received_withd_msg">
+                                                 <p>` + data[x]['msg'] + `</p>
+                                                 <span class="time_date">`+ getTime(data[x]['msgTime']) + ` </span></div>
+                                                 </div>
+                                                 </div> `)
+
+                            
+                            
+
+                        }
+                        else if (id == "17352015")
+                        {
+                            console.log("This is admin : " + id)
+                            msg_history.append(` <div class="outgoing_msg">
+                                                <div class="sent_msg">
+                                                <p>` +  data[x]['msg'] + `</p>
+                                                <span class="time_date">` + getTime(data[x]['msgTime']) + `</span> </div>
+                                                </div> `);
+                            
+                            
+                        }
+                        else
+                        {
+                            console.log("not clicnt nor admin : " + id)
+                        }
+                    }
+                      scrolled = false;
+                    }
+                    
+
+                },
+                error: function(error){
+                    console.log(error);
+                }
+            });
+
+
+
+    }, 6000);
+
+    function updateScroll()
+    {
+      
+      console.log("updateScroll Called")
+      if(!scrolled)
+      {
+        console.log("Scrolled is not True")
+        $('.msg_history').scrollTop($('.msg_history').height())
+      }
+
+    }
+
+    $(".msg_history").on("scroll", function(){
+      scrolled = true;
+      
+      console.log("Scrolled is scrolling")
+    })
+
+
+    });
+    </script>
+
+{% endblock %}

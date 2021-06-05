@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container">
+  <h3 class=" text-center">Messaging</h3>
+
+    <div class="mesgs">
+      <div class="msg_history">
+
+        {% for key,val in data.items() %}
+        
+        {% if val['senderId'] != '17352015' %}
+        <div class="incoming_msg">
+          <div class="incoming_msg_img rounded-circle"> <img src="{{ val['senderProfileUri'] }}" alt="Profile Picture"> </div>
+          <div class="received_msg">
+            <div class="received_withd_msg">
+              <p>{{ val['msg'] }}</p>
+              <span class="time_date"> {{ val['msgTime']|time }}</span></div>
+          </div>
+        </div>
+
+        {% elif val['senderId'] == '17352015' %}
+
+        <div class="outgoing_msg">
+          <div class="sent_msg">
+            <p>{{ val['msg'] }}</p>
+            <span class="time_date"> {{ val['msgTime']|time }}</span> </div>
+        </div>
+        {% else %}
+
+        {% endif %}
+        
+        {% endfor %}
+  
+        <ul id="messages">
+          <li>Shakeel</li>
+        </ul>
+      
+
+
+      </div>
+      <div class="type_msg">
+        <div class="input_msg_write">
+          <input type="text" class="write_msg" placeholder="Type a message" />
+          <button class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+        </div>
+      </div>
+    </div>
+
+</div>
+
+
+{% endblock %}
