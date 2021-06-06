@@ -24,9 +24,9 @@
      <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/foodStyle.css') }}" >
 
     {% if title %}
-        <title>Flask Blog - {{ title}} </title>
+        <title>IUSM - {{ title}} </title>
     {% else %}
-        <title>Flask Blog</title>
+        <title>IUSM</titles>
     {% endif %}
 </head>
 <body>
@@ -35,7 +35,7 @@
       <div class="container">
 
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark-red">
-          <a class="navbar-brand input-serach" href="#">IUSM</a>
+          <a class="navbar-brand input-serach" href="{{ url_for('admin.admin_main') }}">IUSM</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
